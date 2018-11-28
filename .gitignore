@@ -1,6 +1,12 @@
 
+# Ignore IDE folders
 Code/Sandbox/\.idea/
 
+# Ignore SonarQube analysis files
 Code/Sandbox/\.scannerwork/
 
+# Ignore macOS files
 Code/\.DS_Store
+
+# Ignore node_modules
+Code/Sandbox/node_modules
