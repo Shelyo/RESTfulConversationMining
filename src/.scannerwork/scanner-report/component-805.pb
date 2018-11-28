@@ -1,0 +1,1 @@
+¥@bower_components/semantic/src/definitions/collections/table.less 2cssXàhr@bower_components/semantic/src/definitions/collections/table.less

@@ -1,0 +1,6 @@
+projectKey=RESTful_conv
+serverUrl=http://localhost:19000
+serverVersion=7.4.0.18908
+dashboardUrl=http://localhost:19000/dashboard?id=RESTful_conv
+ceTaskId=AWdWLwpARNdgGu0ka48p
+ceTaskUrl=http://localhost:19000/api/ce/task?id=AWdWLwpARNdgGu0ka48p

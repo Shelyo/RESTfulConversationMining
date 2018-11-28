@@ -1,0 +1,1 @@
+ù3bower_components/semantic/dist/components/table.css 2cssXóhr3bower_components/semantic/dist/components/table.css

@@ -1,0 +1,1 @@
+Å)bower_components/semantic/dist/components :\·Ä¬Æ¹®Í´Á°ÊÙÇÒÏÜøÛØóéÔƒí÷†ç€„ù‚Õ‡˜š•¤›£¡¥—¬ªr)bower_components/semantic/dist/components

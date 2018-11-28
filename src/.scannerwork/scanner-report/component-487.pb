@@ -1,0 +1,1 @@
+ç8bower_components/semantic/dist/components/transition.css 2cssXŒhr8bower_components/semantic/dist/components/transition.css

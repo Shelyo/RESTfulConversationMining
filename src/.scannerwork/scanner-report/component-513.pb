@@ -1,0 +1,1 @@
+5bower_components/semantic/dist/components/message.css 2cssXúhr5bower_components/semantic/dist/components/message.css

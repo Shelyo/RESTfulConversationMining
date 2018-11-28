@@ -1,13 +1,13 @@
 
 # Ignore IDE folders
-Code/Sandbox/\.idea/
+\.idea/
 
 # Ignore SonarQube analysis files
-Code/Sandbox/\.scannerwork/
+\.scannerwork/
 
 # Ignore macOS files
-Code/\.DS_Store
+\.DS_Store
 
 # Ignore node_modules and bower_components
-Code/Sandbox/node_modules
-Code/Sandbox/bower_components
+src/node_modules
+src/bower_components
