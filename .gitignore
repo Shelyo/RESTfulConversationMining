@@ -1,12 +1,12 @@
 
 # Ignore IDE folders
-\.idea/
+.idea/
 
 # Ignore SonarQube analysis files
-\.scannerwork/
+.scannerwork/
 
 # Ignore macOS files
-\.DS_Store
+.DS_Store
 
 # Ignore node_modules and bower_components
 src/node_modules
