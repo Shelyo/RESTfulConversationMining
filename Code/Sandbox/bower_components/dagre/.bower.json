@@ -31,6 +31,6 @@
     "commit": "4c7dc4ce4c90043916ed4732c57829e52e21a326"
   },
   "_source": "https://github.com/cpettitt/dagre.git",
-  "_target": "^0.8.1",
+  "_target": "^0.8.2",
   "_originalSource": "dagre"
 }
