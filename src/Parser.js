@@ -1,13 +1,5 @@
-var exports = module.exports
-var requireFromUrl = require('require-from-url/sync');
 var fs = require('fs');
-var dagre = require("dagre");
-var dagreD3 = require("dagre-d3");
 const Route = require('route-parser');
-
-// var graphlib = requireFromUrl("https://dagrejs.github.io/project/graphlib-dot/v0.6.3/graphlib-dot.js")
-// var d3v4 = requireFromUrl("https://d3js.org/d3.v4.js")
-
 
 //Read the file and parse it to objects
 var readParseFile = function(links){
@@ -60,9 +52,6 @@ var flatProcessingOfFile = function(links){
   return logs;
 }
 
-
-//Bug: the logs may contain some undefined entries. Fixed the bug with undefined it was due to an empty line. --Fixed
-
 //Client segmentation.
 var clientSegmentation = function(logs){
   var clients = {}
@@ -106,7 +95,6 @@ var sortClientByDateTime = function(clients){
   return clients;
 }
 
-
 var links, routes;
 var argv = process.argv;
 if(argv[2] === undefined) links = fs.readFileSync("./log2.txt", "ucs2").split('\n');
@@ -123,17 +111,6 @@ return r;
 }
 if(routes !== undefined) routes = createRoutes(routes);
 
-
-// var links = fs.readFileSync("../../Data/log.txt", "utf8").split('\n')
-// var links = fs.readFileSync("./log2.txt", "ucs2").split('\n');
-// var links = fs.readFileSync("./demoLog.txt", 'utf8').split('\n')
-
-//TODO parse a text file with one route per line and create Route objects and push them into the routes array
-// var routes = [];
-// routes.push(new Route('/content/abstract/scopus_id/:id'));
-// routes.push(new Route('/content/serial/title/issn/:id'));
-// routes.push(new Route('/content/author/author_id/:id'));
-
 var createData = function(links, routes, fx){
   var logs;
   if(routes !== undefined){
@@ -144,25 +121,18 @@ var createData = function(links, routes, fx){
   }
   var clients = clientSegmentation(logs);
   clients = sortClientByDateTime(clients);
-  // console.log(clients);
   return clients;
 }
-// var logs = readParseFile(links);
-//var logs = readParseURLRouteFile(links,routes);
-// var logs = flatProcessingOfFile(links);
-// var clients = clientSegmentation(logs);
-// clients = sortClientByDateTime(clients);
+
 var parseRouteData, sequentialParser, flatParser;
 if(routes !== undefined) parseRouteData = createData(links, routes, readParseURLRouteFile);
 sequentialParser = createData(links, undefined, readParseFile);
 flatParser = createData(links, undefined, flatProcessingOfFile);
-// console.log(parseRouteData);
 var data = {};
 data.FlatData = flatParser;
 data.ParseRouteData = parseRouteData;
 data.SequentialData = sequentialParser;
 // Save Data into the data.js file.
-// console.log(data);
 var filepath = "data.js"
 var content = "var data = " + JSON.stringify(data);
 fs.writeFile(filepath, content, (err) => {

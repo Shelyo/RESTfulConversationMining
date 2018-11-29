@@ -16,16 +16,12 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <!-- <script src="firstData.js"></script> -->
-  <!-- <script src="routesData.js"></script> -->
-  <!-- <script src="data.js"></script> -->
   <script src="sqrfun.js"></script>
   <script src="stylingfun.js"></script>
   <script src="patternMatching.js"></script>
   <script src="patternData.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="drawG.js"></script>
-  <!-- <script type="text/javascript" src="setup.js"></script> -->
   <link rel="stylesheet" href="styles.css">
 
   <body>
@@ -35,7 +31,6 @@
         <div id="Clients" style="float: left">
           <select id="multiSelect-Clients" multiple="multiple" onchange="changeTp()">
           </select>
-          <!-- <button class="dropbtn" onmouseover="displayClients()">Clients</button> -->
         </div>
         <select id="multiSelect" multiple="multiple">
         </select>
@@ -48,11 +43,6 @@
           Edge Delay Coloring: <input type="checkbox" id="edc" onclick="myFunction2()"> <br />
           Show Edge Probability: <input type="checkbox" id="sep" onclick="myFunction3()"> <br />
           Status Coloring: <input type="checkbox" id="statusColoring"> <br />
-          <!-- <form  id="formId" onsubmit="getPattern()">
-          <input type="file" name="fname" id="dataId" style="display: none;">
-          <input type="button" value="Add a Pattern" onclick="document.getElementById('dataId').click();" />
-          <input type="submit" />
-        </form> -->
       </div>
       <div id="PatternContainer"style="display: flex; float: right; ">
         <div id="CandidatePatternMenu" style="display: block">
@@ -79,7 +69,6 @@
           </div>
         </div>
       </div>
-      <!-- <svg width="200px" height="200px"></svg> -->
     </div>
     <div style="display: flex" id="bigcontainer">
       <svg id="restalk"> </svg>
@@ -93,7 +82,6 @@
           </div>
           <div id="piechart-4">
           </div>
-          <!-- <svg id="vizPattern"> </svg> -->
         </div>
         <svg id="vizPattern"> </svg>
       </div>
@@ -112,19 +100,15 @@ var displayClients = function(){
   var str = '';
   for(let client in clients){
     let option = document.createElement("option");
-    // option.onmouseenter = function(){
-    //   displayTimePeriods(client);
-    // }
     let linkText = document.createTextNode(i+"-"+client);
     option.value = i+"-"+client;
     option.appendChild(linkText);
     div.appendChild(option);
     i++;
-    // str+=('<option value=' + client + 'onmouseenter="displayTimePeriods(\''+ client +'\')" onclick="drawGraph(\''+client +'\')"> '+ client + '</option> ');
   }
 }
 displayClients();
-// localStorage.removeItem('objectToPass');
+
 //LOAD Google Charts
 var globalGraph, globalNodes, convDrawn, globalCandidatePatterns;
 var generateCP = function (e){
@@ -229,7 +213,6 @@ var generatePattern = function(pattern, size){
   }
 }
 google.charts.load('current', {'packages':['corechart']});
-// google.charts.setOnLoadCallback(createPieChart);
 // Input related code goes here
 function getPattern(e){
   var x = e.preventDefault();
@@ -244,7 +227,6 @@ function getPattern(e){
       pattern = e.target.result;
       pattern = pattern.split("\n");
       console.log(pattern);
-      // hasPattern(globalNodes, patternMixed, false, convDrawn);
     }
     for(let i = 0; i < file.files.length; i++){
       reader.readAsText(file.files[i]);
@@ -379,8 +361,6 @@ var visualizePattern = function(obj, value){
   endConnections[value]= obj.endConnection.e1;
   nodes = obj.nodes;
   var statusObj = {};
-  var totalTpIpArray = []
-  var startKey, startStatus;
   var comparisonTableData = {
     timePorIP : [],
     uniqueOverlapping : {
@@ -400,7 +380,6 @@ var visualizePattern = function(obj, value){
   }
   var totalRequestsData = totalNumberOfRequests(nodes);
   var totalRequests = totalRequestsData.total;
-  var maxRequests = totalRequestsData.maxRequests;
   obj = computeMinMaxAvgDelayVal(nodes);
   nodes = obj.nodes;
   var totalAvgKey = obj.totalAvgKey;
@@ -418,7 +397,6 @@ var disablePatternStyle = function(){
   }
 }
 var hasPatternClick = function(e){
-  let id = e.currentTarget.id;
   if(globalGraph === undefined) console.log("Draw a graph")
   else{
     var section = document.getElementById("predefinedPatterns");
@@ -478,7 +456,6 @@ var drawGraph = function(dataObject){
   var nodes = []
   var incomingXorNodes = {}
   var totalTpIpArray = []
-  var startKey, startStatus;
   var comparisonTableData = {
     timePorIP : [],
     uniqueOverlapping : {
@@ -520,7 +497,6 @@ var drawGraph = function(dataObject){
   drawG(g, nodes, comparisonTableData, incomingXorNodes, totalAvgKey, maxDelay, minDelay, totalRequests, endConnections, statusObj);
   setNodeClasses(g, nodes, totalRequestsData);
   setVisualizationConfig(nfc, eft, edc, sep, statusColoring, maxRequests, statusObj);
-  // triggerEdgeProbability(sep);
   var rainbows = conversionPath("tpIpColoring", totalTpIpArray.length, totalTpIpArray, comparisonTableData.uniquenessNodes);
 
   var convSharingNodes = createConversationSharingNodes(comparisonTableData.uniquenessNodes);
@@ -531,9 +507,7 @@ var drawGraph = function(dataObject){
   globalGraph = g;
   convDrawn = totalTpIpArray.length;
   console.log(comparisonTableData);
-  let chart1 = displayPieChar(numOfNodes.data, numOfNodes.options, "piechart-1", rainbows.nodesRainbow, undefined);
   let chart2 = displayPieChar(numOfSharedNodes.data, numOfSharedNodes.options, "piechart-2", sharedNodesRainbow, undefined);
-  let chart3 = displayPieChar(convSharingNodes.data, convSharingNodes.options, "piechart-3", rainbows.pieChartRainbow, comparisonTableData.uniquenessNodes);
   var eventHandlerPieCharts = function(chart, data){
     let row = chart.getSelection();
     if(row.length > 0){
@@ -548,11 +522,8 @@ var drawGraph = function(dataObject){
     chart.setSelection([]);
   }
   setStyleShared(sharedNodesRainbow);
-  // google.visualization.events.addListener(chart1, "select", function(){eventHandlerPieCharts(chart1 , google.visualization.arrayToDataTable(numOfNodes.data), rainbows.nodesRainbow)})
   google.visualization.events.addListener(chart2, "select", function(){eventHandlerPieCharts(chart2, google.visualization.arrayToDataTable(numOfSharedNodes.data))})
-  // google.visualization.events.addListener(chart3, "select", function(){eventHandlerPieCharts(chart3, google.visualization.arrayToDataTable(convSharingNodes.data),rainbows.pieChartRainbow)})
-  // console.log(c);
-  renderSvg(g, "svg#restalk", rainbows.dynamicPieChartRainbow, comparisonTableData.uniquenessNodes, comparisonTableData.nodeIpTp);
+  renderSvg(g, "svg#restalk", rainbows.dynamicPieChartRainbow, comparisonTableData.uniquenessNodes);
 }
 var setStyleShared = function(rainbow){
   var sheet;
@@ -564,7 +535,7 @@ var setStyleShared = function(rainbow){
   }
   document.getElementsByTagName("STYLE")[5].disabled = false;
 }
-var renderSvg = function(g, clazz, rainbow, rules, convSize){
+var renderSvg = function(g, clazz, rainbow, rules){
   var svg = d3.select(clazz);
   svg.select("g").remove();
   var inner = svg.append("g");
@@ -581,9 +552,8 @@ var renderSvg = function(g, clazz, rainbow, rules, convSize){
   // Center the graph
   var initialScale = 0.2;
   svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - g.graph().width * initialScale) / 2, 20).scale(initialScale));
-  svg.selectAll("g.node.start").on("click", function(id) { var _node = g.node(id);
-    var n = id.split("start-")[1];
-    // console.log(document.body.classList);
+  svg.selectAll("g.node.start").on("click", function(id) {
+      var n = id.split("start-")[1];
     document.body.classList.toggle("enable-path-"+n);
     let arr = document.body.classList.value;
     arr = arr.split(" ");
@@ -626,7 +596,6 @@ var renderSvg = function(g, clazz, rainbow, rules, convSize){
         if(newArr.length > 0){
           ru = "";
           for(let i = 0; i < newArr.length; i++){
-            // console.log(newArr[i]);
             if(i==0) ru = newArr[i];
             else ru = ru + ("-"+newArr[i]);
           }
@@ -656,6 +625,5 @@ var renderSvg = function(g, clazz, rainbow, rules, convSize){
     chart.draw(data, options);
     return chart;
   }
-  // google.charts.load('visualization', '1.0', {packages: ['corechart', 'table', 'controls', 'gauge']});
   </script>
   </html>
