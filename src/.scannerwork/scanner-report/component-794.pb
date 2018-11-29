@@ -1,1 +1,0 @@
-š<bower_components/semantic/src/definitions/modules/shape.less 2cssX—hr<bower_components/semantic/src/definitions/modules/shape.less

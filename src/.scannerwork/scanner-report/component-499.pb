@@ -1,1 +1,0 @@
-ó4bower_components/semantic/dist/components/reveal.css 2cssX¨hr4bower_components/semantic/dist/components/reveal.css

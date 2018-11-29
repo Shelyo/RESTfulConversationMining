@@ -1,1 +1,0 @@
-Ä3bower_components/semantic/dist/components/shape.css 2cssXŸhr3bower_components/semantic/dist/components/shape.css

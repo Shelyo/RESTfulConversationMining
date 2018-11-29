@@ -1,1 +1,0 @@
-ò<bower_components/semantic/src/definitions/elements/icon.less 2cssXöhr<bower_components/semantic/src/definitions/elements/icon.less

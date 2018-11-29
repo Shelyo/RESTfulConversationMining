@@ -1,1 +1,0 @@
-Ê2bower_components/semantic/dist/components/card.css 2cssXæhr2bower_components/semantic/dist/components/card.css

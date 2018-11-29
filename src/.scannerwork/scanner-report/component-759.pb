@@ -1,1 +1,0 @@
-÷=bower_components/semantic/src/definitions/elements/image.less 2cssXÉhr=bower_components/semantic/src/definitions/elements/image.less

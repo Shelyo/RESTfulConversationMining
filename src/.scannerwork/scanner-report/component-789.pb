@@ -1,1 +1,0 @@
-•=bower_components/semantic/src/definitions/modules/search.less 2cssX¿hr=bower_components/semantic/src/definitions/modules/search.less

@@ -1,1 +1,0 @@
-€5bower_components/semantic/dist/components/sidebar.css 2cssXõhr5bower_components/semantic/dist/components/sidebar.css

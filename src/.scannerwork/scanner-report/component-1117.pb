@@ -1,1 +1,0 @@
-İpatternData.js 2jsXæhrpatternData.js

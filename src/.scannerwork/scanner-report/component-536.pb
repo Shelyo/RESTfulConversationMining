@@ -1,1 +1,0 @@
-˜3bower_components/semantic/dist/components/embed.css 2cssX§hr3bower_components/semantic/dist/components/embed.css

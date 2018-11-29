@@ -1,1 +1,0 @@
-¤4bower_components/semantic/dist/components/sticky.css 2cssXOhr4bower_components/semantic/dist/components/sticky.css

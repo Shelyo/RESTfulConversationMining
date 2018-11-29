@@ -1,1 +1,0 @@
-û=bower_components/semantic/src/definitions/elements/label.less 2cssXë	hr=bower_components/semantic/src/definitions/elements/label.less
