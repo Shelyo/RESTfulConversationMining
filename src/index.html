@@ -507,7 +507,9 @@ var drawGraph = function(dataObject){
   globalGraph = g;
   convDrawn = totalTpIpArray.length;
   console.log(comparisonTableData);
+  let chart1 = displayPieChar(numOfNodes.data, numOfNodes.options, "piechart-1", rainbows.nodesRainbow, undefined);
   let chart2 = displayPieChar(numOfSharedNodes.data, numOfSharedNodes.options, "piechart-2", sharedNodesRainbow, undefined);
+  let chart3 = displayPieChar(convSharingNodes.data, convSharingNodes.options, "piechart-3", rainbows.pieChartRainbow, comparisonTableData.uniquenessNodes);
   var eventHandlerPieCharts = function(chart, data){
     let row = chart.getSelection();
     if(row.length > 0){
@@ -552,8 +554,8 @@ var renderSvg = function(g, clazz, rainbow, rules){
   // Center the graph
   var initialScale = 0.2;
   svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - g.graph().width * initialScale) / 2, 20).scale(initialScale));
-  svg.selectAll("g.node.start").on("click", function(id) {
-      var n = id.split("start-")[1];
+  svg.selectAll("g.node.start").on("click", function(id) { var _node = g.node(id);
+    var n = id.split("start-")[1];
     document.body.classList.toggle("enable-path-"+n);
     let arr = document.body.classList.value;
     arr = arr.split(" ");
