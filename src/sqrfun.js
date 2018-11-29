@@ -3,8 +3,6 @@ var seqPreservingComparison = function(client, length, nodes, start, incomingXor
   var prev = start;
   var prevId = start;
   var endConnection = {};
-  var edges = [];
-  var finalEnd;
   var k = null;
   var s = null;
   var l;
@@ -35,8 +33,6 @@ var seqPreservingComparison = function(client, length, nodes, start, incomingXor
     else{
       l = nodes[k][s].statusArray.length;
       nodes[k][s].statusArray[l-1].finalEnd = str+' '+status;
-      // if(k == "DELETE/last" && s == "204") nodes[k][s].statusArray[l-1].finalEnd = "POST/prev" + ' ' + "400";
-      // if(k == "PUT/next" && s == "200") nodes[k][s].statusArray[l-1].finalEnd = "OPTIONS/other" + ' ' + "200";
       k = str;
       s = status;
     }
@@ -94,10 +90,8 @@ var outgoingXOR = function(nodes){
     for(var status in nodes[key]){
       for(let i = 0; i < nodes[key][status].statusArray.length; i++){
         for(let j = 0; j < counterArray.length; j++){
-          // if("GET/poll/1/vote/1" == key) console.log(nodes[key][status].statusArray[i].start);
           if(counterArray[j] == nodes[key][status].statusArray[i].start){
             nodes[key][status].statusArray[i].start = "XOR-" + counterArray[j];
-            // console.log(nodes[key][status].statusArray[i].start, status, i);
           }
         }
       }
@@ -106,7 +100,6 @@ var outgoingXOR = function(nodes){
   return nodes;
 }
 var incomingXOR = function(nodes, start, incomingXorNodes){
-  // console.log(nodes);
   var incomingXorKeys = []
   var keyCounter = 0;
   var keyArray = []
@@ -119,7 +112,6 @@ var incomingXOR = function(nodes, start, incomingXorNodes){
         for(let j = 0; j < nodes[key][status].statusArray.length; j++){
           let spaces = nodes[key][status].statusArray[j].end.split(' ');
           if((spaces[0] == start && i == 0) || spaces[0] == "XOR-"+keyArray[i] || spaces[0] == keyArray[i]){
-            // console.log(spaces[0]);
             keyCounter++;
           }
         }
@@ -130,7 +122,6 @@ var incomingXOR = function(nodes, start, incomingXorNodes){
     }
     keyCounter = 0;
   }
-  // console.log(incomingXorKeys);
   for(let i = 0; i < incomingXorKeys.length; i++){
     for(var key in nodes){
       if(key == incomingXorKeys[i].key){
@@ -176,7 +167,6 @@ var incomingXOR = function(nodes, start, incomingXorNodes){
 //Compute Delay Avg
 var computeDelayAvg = function(nodes, key, st){
   var avg = 0;
-  var counter = 0;
   if(st == "total"){
     let counter = 0;
     for(var status in nodes[key]){
@@ -287,7 +277,6 @@ var differenceThreshold = function(client){
     if(min > diff) min = diff;
   }
   avg /= (client.length-1);
-  let days =  (avg / (1000*60*60*24));
   let diffThreshold = (min+max)/2;
   var timeP = []
   timeP.push(client[0])
@@ -308,10 +297,7 @@ var differenceThreshold = function(client){
 var checkIfIncomingXorExists = function(nodes, key, incomingXorNodes, size, inXorId){
 
   if(size == 1){
-    // console.log(key, incomingXorNodes);
     var id = Object.keys(incomingXorNodes[key])[0].split(' ');
-    var k = id[0];
-    var s = id[1];
     for(var status in nodes[key]){
       for(let i = 0; i < nodes[key][status].statusArray.length; i++){
         if(nodes[key][status].statusArray[i].start == inXorId){
@@ -319,7 +305,6 @@ var checkIfIncomingXorExists = function(nodes, key, incomingXorNodes, size, inXo
         }
       }
     }
-    // console.log(nodes[key]);
   }
 }
 
@@ -334,7 +319,6 @@ var multipleIncomingXorSetUp = function(g, nodes, key, inXorIdSize, maxDelay, mi
         }
         else{
           let avg = getIncomingEdgeIndexDelay(nodes, key, incomingXorNodes[key][space][0][0]+' '+incomingXorNodes[key][space][0][1], incomingXorNodes[key][space].length);
-          // console.log(avg);
           bin = computeAssignBin(avg, maxDelay, 1);
           let p = getProbabilityLabel(nodes, incomingXorNodes[key][space][0][0], incomingXorNodes[key][space][0][1], incomingXorNodes[key][space].length);
           g.setEdge(incomingXorNodes[key][space][0][0]+' '+incomingXorNodes[key][space][0][1], str,
@@ -344,7 +328,6 @@ var multipleIncomingXorSetUp = function(g, nodes, key, inXorIdSize, maxDelay, mi
         }
       }
       else{
-        // if(nodes["GET/post"]) console.log("Trigger");
         for(var space in incomingXorNodes[key]){
           var len = incomingXorNodes[key][space][0].length;
           if(len == 1){
@@ -376,48 +359,7 @@ var multipleIncomingXorSetUp = function(g, nodes, key, inXorIdSize, maxDelay, mi
           else p = p+'%';
           return p;
         }
-        // var getComparisonTableNodes = function(nodes, comparisonTableData){
-        //   var array = [];
-        //   var totalArray = [];
-        //   for(var key in nodes){
-        //     if(comparisonTableData.nodes[key] === undefined){
-        //       comparisonTableData.nodes[key] = {
-        //         statuses : {},
-        //         totalArray : [],
-        //       }
-        //     }
-        //     for(var status in nodes[key]){
-        //       for(let i = 0; i < nodes[key][status].statusArray.length; i++){
-        //           if(array.includes(nodes[key][status].tpIpArray[i]) != true){
-        //           array.push(nodes[key][status].tpIpArray[i]);
-        //         }
-        //         if(totalArray.includes(nodes[key][status].tpIpArray[i]) != true) totalArray.push(nodes[key][status].tpIpArray[i]);
-        //       }
-        //       if(array.length > 1) comparisonTableData.overlappingNodes.size++;
-        //       else comparisonTableData.uniqueNodes.size++;
-        //
-        //       //nodecounter[array.length]++
-        //       //nodecounter[1] // uniqueNodes
-        //       //nodecounter[2] // two IP
-        //       //nodecounter[3] // three IP
-        //
-        //       //nodeipcounter[IP]++ //how many nodes has IP?
-        //
-        //       if(comparisonTableData.nodes[key].statuses[status] === undefined){
-        //         comparisonTableData.nodes[key].statuses[status] = [];
-        //         comparisonTableData.nodes[key].statuses[status] = array;
-        //       }
-        //       array = [];
-        //     }
-        //     //BUG
-        //     if(totalArray.length > 1) comparisonTableData.overlappingNodes.size++;
-        //     let l = Object.keys(nodes[key]).length;
-        //     if(totalArray.length == 1 && l > 1) comparisonTableData.uniqueNodes.size++;
-        //     comparisonTableData.nodes[key].totalArray = totalArray;
-        //     totalArray = [];
-        //   }
-        //   return comparisonTableData;
-        // }
+    
         var increaseAppropriateEdge = function(size, key, status, comparisonTableData, kind){
           if(kind === "outgoingXOR" && size == 1){
             if(comparisonTableData.nodes[key].totalArray.length == 1) comparisonTableData.uniqueEdges.size++;
@@ -553,7 +495,6 @@ var multipleIncomingXorSetUp = function(g, nodes, key, inXorIdSize, maxDelay, mi
               var text = document.createTextNode(str);
               var text1 = document.createTextNode(data[input]);
               th.appendChild(text);
-              // console.log(x);
               x.appendChild(th);
               td.appendChild(text1);
               y.appendChild(td);

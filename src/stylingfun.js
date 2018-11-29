@@ -17,7 +17,6 @@ var disableConversionPaths = function(){
 var conversionPath = function(class_prefix, size, totalTpIpArray, data){
   let style = document.createElement('style')
 
-  // style.disabled = true;
   // WebKit hack :(
   style.appendChild(document.createTextNode(""));
   // Add the <style> element to the page
@@ -38,7 +37,6 @@ var conversionPath = function(class_prefix, size, totalTpIpArray, data){
   for(let i = 0; i < combinations.length; i++){
     let subComb = combinations[i].split('');
     subComb.reverse();
-    console.log(rainbow, subComb);
     let color =  hexToRgb(rainbow[subComb[0]]);
     let str1 = "."+class_prefix+"-"+subComb[0];
     let str = ".enable-path-"+subComb[0];
@@ -188,22 +186,14 @@ var deleteStyles = function(){
 //Set Classes of Nodes, corresponding with their number of requests.
 var setNodeClasses = function(g, nodes, totalRequestsData){
   var totalRequests = totalRequestsData.total;
-  var maxRequests = totalRequestsData.maxRequests;
-  var red = [255,0,0];
-  var yellow = [255,255,0];
+
   for(var key in g._nodes){
     if(g._nodes[key].shape == "rect"){
       var spaces = key.split(' ');
       if(spaces[1] === undefined){
-        // var percent = calculatePercentage(1, maxRequests, totalRequests[key]);
-        // var color = getGradientColor(red, yellow, (percent));
-        // g._nodes[key].style = "fill: rgb("+color[0]+","+color[1]+","+color[2]+")"
         g._nodes[key].class += " totalRequest-"+totalRequests[key];
       }
       else{
-        // var percent = calculatePercentage(1, maxRequests, nodes[spaces[0]][spaces[1]].statusArray.length);
-        // var color = getGradientColor(red, yellow, (percent));
-        // g._nodes[key].style = "fill: rgb("+color[0]+","+color[1]+","+color[2]+")"
         g._nodes[key].class += " totalRequest-"+nodes[spaces[0]][spaces[1]].statusArray.length;
       }
     }
@@ -215,7 +205,6 @@ var getIncomingEdgeIndexDelay = function(nodes, k, node, counter){
   let checker = 0;
   for(var s in nodes[k]){
     for(let i = 0; i < nodes[k][s].statusArray.length; i++){
-      // if(k == 'POST/last') console.log(nodes[k][s].statusArray[i])
       if(nodes[k][s].statusArray[i].finalStart == node || 'XOR-'+nodes[k][s].statusArray[i].finalStart == node){
         avg+=nodes[k][s].delayArray[i];
         checker++;
@@ -223,32 +212,8 @@ var getIncomingEdgeIndexDelay = function(nodes, k, node, counter){
     }
   }
   if(checker == counter) return (avg/counter);
-  else {
-    console.log("ERROR IN getIncomingEdgeIndexDelay")
-  };
 }
-// var triggerEdgeProbability = function(elem){
-//   elem.onclick = function(){
-//       if(elem.checked != true) disableEdgeProbability()
-//       else enableEdgeProbability()
-//   }
-// }
-// var enableEdgeProbability = function(){
-//   $(document).ready(function(){
-//     var list = document.getElementsByClassName("edgeLabel");
-//     for(let i = 0; i < list.length; i++){
-//       list[i].style.cssText = "opacity: 1;";
-//     }
-//   })
-// }
-// var disableEdgeProbability = function(){
-//   $(document).ready(function(){
-//     var list = document.getElementsByClassName("edgeLabel");
-//     for(let i = 0; i < list.length; i++){
-//       list[i].style.cssText = "opacity: 0;";
-//     }
-//   })
-// }
+
 var hasStatus = function(statusObj, status){
   if(statusObj[status] === undefined) statusObj[status] = true;
 }

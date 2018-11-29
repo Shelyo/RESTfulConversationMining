@@ -135,8 +135,7 @@ var drawG = function(g, nodes, comparisonTableData, incomingXorNodes, totalAvgKe
           }
           g.nodes().forEach(function(v) {
             var node = g.node(v);
-            // console.log(node);
-            // console.log(g.nodes())
+
             // Round the corners of the nodes
             node.rx = node.ry = 5;
           });

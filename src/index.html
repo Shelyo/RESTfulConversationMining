@@ -136,7 +136,7 @@ var generateCP = function (e){
   if(convDrawn !== undefined && convDrawn > 1 && convDrawn >= shareNum){
     let pattern = {}
     generatePattern(pattern, candidateLengthNum);
-    let obj = hasPatternWholeGraph(globalGraph, globalNodes, pattern, true, shareNum);
+    let obj = hasPatternWholeGraph(globalNodes, pattern, true, shareNum);
     if(obj.bool){
       let mainDiv = document.getElementById("predefinedCandidatePatterns");
       let nodesViz = obj.matrixNodesVisualization.n;
@@ -244,7 +244,7 @@ function getPattern(e){
       pattern = e.target.result;
       pattern = pattern.split("\n");
       console.log(pattern);
-      // hasPattern(g, globalNodes, patternMixed, false, convDrawn);
+      // hasPattern(globalNodes, patternMixed, false, convDrawn);
     }
     for(let i = 0; i < file.files.length; i++){
       reader.readAsText(file.files[i]);
@@ -275,7 +275,7 @@ var checkPatterns = function(pattern){
   if(globalGraph === undefined) console.log("GLOBAL GRAPH NOT SET UP")
   else{
     clearPatternMenu();
-    let obj = hasPatternWholeGraph(globalGraph, globalNodes, pattern, false, convDrawn);
+    let obj = hasPatternWholeGraph(globalNodes, pattern, false, convDrawn);
     if(obj.bool){
       let div = document.getElementById("patternButtons");
       let newDiv = document.createElement("div");
