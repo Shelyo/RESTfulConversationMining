@@ -2,7 +2,7 @@
   "name": "restfulminer",
   "version": "1.0.0",
   "description": "",
-  "main": "Parser.js",
+  "main": "parser.js",
   "dependencies": {
     "dagre": "^0.8.2",
     "dagre-d3": "^0.6.1",
@@ -16,7 +16,7 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "scripts": {
-    "start": "node Parser.js && open dataIndex.html",
+    "start": "node js/parser.js && open html/dataIndex.html",
     "install": "bower install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
