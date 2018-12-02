@@ -29,7 +29,7 @@
 <div class="d-block">
     <div id="Container" class="d-flex">
         <button onclick="goBack()">Go Back</button>
-        <div id="Clients" style="float: left">
+        <div id="Clients">
             <select id="multiSelect-Clients" multiple="multiple" onchange="changeTp()">
             </select>
         </div>
@@ -46,7 +46,7 @@
             Show Edge Probability: <input type="checkbox" id="sep" onclick="myFunction3()"> <br/>
             Status Coloring: <input type="checkbox" id="statusColoring"> <br/>
         </div>
-        <div id="PatternContainer" class="d-flex" style="float: right; ">
+        <div id="PatternContainer" class="d-flex">
             <div id="CandidatePatternMenu" class="d-block">
                 <form id="formCandidatePatterns" onsubmit="generateCP()" class="d-block">
                     <input id="candidateLength" type="number" value="2" min="2" class="d-block">
