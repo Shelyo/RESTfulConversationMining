@@ -1,8 +1,23 @@
-var fs = require('fs');
+const fs = require('fs');
 const Route = require('route-parser');
 
-//Read the file and parse it to objects
-var readParseFile = function(links){
+class Parser {
+  parseLogs(logs) {
+    const fields = ['date', 'time', 'ip', 'method', 'location', 'status'];
+
+    return logs.map((log) => {
+      let logObj = {};
+      let logData = log.trim().split(/\s+/);
+
+      fields.forEach((field, index) => logObj[field] = logData[index]);
+      return logObj;
+    }).filter((e) => !Object.getOwnPropertyNames(e).length === 0);
+  }
+  
+}
+
+
+var parseToLogs = function(links) {
   var logs = [];
   for(let i = 0; i < links.length; i++){
     let str = links[i];
@@ -97,7 +112,7 @@ var sortClientByDateTime = function(clients){
 
 var links, routes;
 var argv = process.argv;
-if(argv[2] === undefined) links = fs.readFileSync("./data/logs/log3.txt", "ucs2").split('\n');
+if(argv[2] === undefined) links = fs.readFileSync("./data/logs/log3.txt", "ucs2").split(/\n+/);
 else links = fs.readFileSync(argv[2], "utf8").split('\n')
 if(argv[3] != undefined){
  routes = fs.readFileSync(argv[3], "utf8").split('\n');
@@ -126,7 +141,7 @@ var createData = function(links, routes, fx){
 
 var parseRouteData, sequentialParser, flatParser;
 if(routes !== undefined) parseRouteData = createData(links, routes, readParseURLRouteFile);
-sequentialParser = createData(links, undefined, readParseFile);
+sequentialParser = createData(links, undefined, Parser.parseLogs);
 flatParser = createData(links, undefined, flatProcessingOfFile);
 var data = {};
 data.FlatData = flatParser;
