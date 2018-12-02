@@ -1,11 +1,11 @@
 //Sequence Preserving Comparison
 function seqPreservingComparison(client, length, nodes, start, incomingXorNodes, endName, tpIndex) {
-  var prev = start;
-  var prevId = start;
+  let prev = start;
+  let prevId = start;
   const endConnection = {};
-  var k = null;
-  var s = null;
-  var l;
+  let k = null;
+  let s = null;
+  let l;
   for (let i = 0; i < length; i++) {
     let str = client[i].method + client[i].location;
     let key = client[i].method + ' ' + client[i].location;
@@ -65,10 +65,10 @@ function seqPreservingComparison(client, length, nodes, start, incomingXorNodes,
 }
 
 function outgoingXOR(nodes) {
-  var counterArray = [];
-  var xorTitle;
-  for (var key in nodes) {
-    for (var status in nodes[key]) {
+  let counterArray = [];
+  let xorTitle;
+  for (let key in nodes) {
+    for (let status in nodes[key]) {
       if (nodes[key][status].statusArray.length > 1) {
         let check = false;
         for (let i = 0; i < nodes[key][status].statusArray.length; i++) {
@@ -86,8 +86,8 @@ function outgoingXOR(nodes) {
       }
     }
   }
-  for (var key in nodes) {
-    for (var status in nodes[key]) {
+  for (let key in nodes) {
+    for (let status in nodes[key]) {
       for (let i = 0; i < nodes[key][status].statusArray.length; i++) {
         for (let j = 0; j < counterArray.length; j++) {
           if (counterArray[j] == nodes[key][status].statusArray[i].start) {
@@ -101,15 +101,15 @@ function outgoingXOR(nodes) {
 }
 
 function incomingXOR(nodes, start, incomingXorNodes) {
-  var incomingXorKeys = [];
-  var keyCounter = 0;
-  var keyArray = [];
-  for (var key in nodes) {
+  let incomingXorKeys = [];
+  let keyCounter = 0;
+  let keyArray = [];
+  for (let key in nodes) {
     keyArray.push(key);
   }
   for (let i = 0; i < keyArray.length; i++) {
-    for (var key in nodes) {
-      for (var status in nodes[key]) {
+    for (let key in nodes) {
+      for (let status in nodes[key]) {
         for (let j = 0; j < nodes[key][status].statusArray.length; j++) {
           let spaces = nodes[key][status].statusArray[j].end.split(' ');
           if ((spaces[0] == start && i == 0) || spaces[0] == "XOR-" + keyArray[i] || spaces[0] == keyArray[i]) {
@@ -124,12 +124,12 @@ function incomingXOR(nodes, start, incomingXorNodes) {
     keyCounter = 0;
   }
   for (let i = 0; i < incomingXorKeys.length; i++) {
-    for (var key in nodes) {
+    for (let key in nodes) {
       if (key == incomingXorKeys[i].key) {
-        for (var status in nodes[key]) {
+        for (let status in nodes[key]) {
           for (let j = 0; j < nodes[key][status].statusArray.length; j++) {
             if (nodes[key][status].statusArray[j].start !== "inXOR-" + key) {
-              var spaces = nodes[key][status].statusArray[j].start
+              let spaces = nodes[key][status].statusArray[j].start
               nodes[key][status].statusArray[j].start = "inXOR-" + key
               if (incomingXorNodes[key] === undefined) {
                 incomingXorNodes[key] = {};
@@ -146,7 +146,7 @@ function incomingXOR(nodes, start, incomingXorNodes) {
                   incomingXorNodes[key][newKey] = []
                 }
                 for (let k = 0; k < incomingXorNodes[key][spaces[0] + ' ' + spaces[1]].length; k++) {
-                  var formKey = "XOR-" + spaces[0] + ' ' + spaces[1];
+                  let formKey = "XOR-" + spaces[0] + ' ' + spaces[1];
                   incomingXorNodes[key][newKey].push(formKey.split(' '));
                 }
                 delete incomingXorNodes[key][spaces[0] + ' ' + spaces[1]];
@@ -157,7 +157,7 @@ function incomingXOR(nodes, start, incomingXorNodes) {
       }
     }
   }
-  var obj = {
+  let obj = {
     "nodes": nodes,
     incomingXorNodes: incomingXorNodes,
   };
@@ -175,8 +175,8 @@ function computeDelay(nodes, startNode, endNode) {
 
 function checkIfIncomingXorExists(nodes, key, incomingXorNodes, size, inXorId) {
   if (size == 1) {
-    var id = Object.keys(incomingXorNodes[key])[0].split(' ');
-    for (var status in nodes[key]) {
+    let id = Object.keys(incomingXorNodes[key])[0].split(' ');
+    for (let status in nodes[key]) {
       for (let i = 0; i < nodes[key][status].statusArray.length; i++) {
         if (nodes[key][status].statusArray[i].start == inXorId) {
           nodes[key][status].statusArray[i].start = id[0] + ' ' + id[1];
@@ -187,10 +187,10 @@ function checkIfIncomingXorExists(nodes, key, incomingXorNodes, size, inXorId) {
 }
 
 function multipleIncomingXorSetUp(g, nodes, key, inXorIdSize, maxDelay, minDelay, incomingXorNodes) {
-  var str = "inXOR-" + key;
+  let str = "inXOR-" + key;
   if (inXorIdSize > 1) {
-    for (var space in incomingXorNodes[key]) {
-      var len = incomingXorNodes[key][space][0].length;
+    for (let space in incomingXorNodes[key]) {
+      let len = incomingXorNodes[key][space][0].length;
       if (len == 1) {
         g.setEdge(incomingXorNodes[key][space][0][0], str,
           {class: "edge-thickness-" + incomingXorNodes[key][space].length + " delay-coloring-0"})
@@ -206,8 +206,8 @@ function multipleIncomingXorSetUp(g, nodes, key, inXorIdSize, maxDelay, minDelay
       }
     }
   } else {
-    for (var space in incomingXorNodes[key]) {
-      var len = incomingXorNodes[key][space][0].length;
+    for (let space in incomingXorNodes[key]) {
+      let len = incomingXorNodes[key][space][0].length;
       if (len == 1) {
         g.setEdge(incomingXorNodes[key][space][0][0], key,
           {class: "edge-thickness-" + incomingXorNodes[key][space].length + " delay-coloring-0"})
@@ -242,11 +242,11 @@ function getProbabilityLabel(nodes, s1, s2, length) {
 }
 
 function updateComparisonUniqueness(word, comparisonTableData, key, status) {
-  var dataUniqueness = comparisonTableData.uniqueness;
-  var dataUniquenessNodes = comparisonTableData.uniquenessNodes;
-  var dataNodeIpTp = comparisonTableData.nodeIpTp
-  var sharedNodes = comparisonTableData.sharedNodes;
-  var _word = word.split(' ');
+  let dataUniqueness = comparisonTableData.uniqueness;
+  let dataUniquenessNodes = comparisonTableData.uniquenessNodes;
+  let dataNodeIpTp = comparisonTableData.nodeIpTp
+  let sharedNodes = comparisonTableData.sharedNodes;
+  let _word = word.split(' ');
   _word.sort().reverse();
   if (dataUniqueness[_word.length - 1] === undefined) {
     dataUniqueness[_word.length - 1] = 1;
@@ -258,7 +258,7 @@ function updateComparisonUniqueness(word, comparisonTableData, key, status) {
   }
   if (_word.length > 2) comparisonTableData.uniqueOverlapping.overlappingNodes.size++;
   else comparisonTableData.uniqueOverlapping.uniqueNodes.size++;
-  var tPiP = "";
+  let tPiP = "";
   for (let i = 0; i < _word.length - 1; i++) {
     let val = _word[i].split('-')[1];
     if (i) tPiP += '-' + val
@@ -281,7 +281,7 @@ function updateComparisonUniqueness(word, comparisonTableData, key, status) {
 
 function createComparisonUniquenessTable(data) {
   function fx(data, arr) {
-    for (var node in data) {
+    for (let node in data) {
       if (node == 1) arr.push(["Unique Nodes", data[node]]);
       else arr.push([("Shared between " + node + " \n IP/TP"), data[node]]);
     }
@@ -291,7 +291,7 @@ function createComparisonUniquenessTable(data) {
 
 function createComparisonNodeIpTpTable(data) {
   function fx(data, arr) {
-    for (var node in data) {
+    for (let node in data) {
       arr.push(["IP/TP-" + node, data[node]]);
     }
   }
@@ -300,7 +300,7 @@ function createComparisonNodeIpTpTable(data) {
 
 function createConversationSharingNodes(data) {
   function fx(data, arr) {
-    for (var elem in data) {
+    for (let elem in data) {
       const oldElem = elem;
       elem = elem.split('-');
       if (elem.length > 1) {
@@ -315,7 +315,7 @@ function createConversationSharingNodes(data) {
 
 function createDynamicPieChart(data) {
   function fx(data, arr) {
-    for (var elem in data) {
+    for (let elem in data) {
       const oldElem = elem;
       elem = elem.split('-');
       if (elem.length > 1) {
@@ -329,11 +329,11 @@ function createDynamicPieChart(data) {
 }
 
 function createPieChart(data, fx, title) {
-  var arr = [];
+  let arr = [];
   arr.push(["Task", "Hours Per Day"]);
   fx(data, arr);
   // Optional; add a title and set the width and height of the chart
-  var options = {'title': title, 'width': "50%", 'height': "150px"};
+  let options = {'title': title, 'width': "50%", 'height': "150px"};
 
   // Display the chart inside the <div> element with id="piechart"
   return {

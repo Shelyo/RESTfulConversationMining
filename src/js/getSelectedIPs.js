@@ -1,7 +1,7 @@
 function getSelectedIPs(clients, elem) {
-  var result = {};
-  var options = elem && elem.options;
-  var opt;
+  let result = {};
+  let options = elem && elem.options;
+  let opt;
   for (let i = 0, iLen = options.length; i < iLen; i++) {
     opt = options[i];
 
