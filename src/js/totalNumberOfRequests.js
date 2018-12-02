@@ -1,5 +1,4 @@
 function totalNumberOfRequests(nodes) {
-  console.log("OOOOOOOO");
   var counter = 0;
   var totalNumberOfRequests = {};
   var max = Number.MIN_VALUE;
