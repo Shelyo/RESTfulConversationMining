@@ -1,8 +1,8 @@
 //Sequence Preserving Comparison
-var seqPreservingComparison = function (client, length, nodes, start, incomingXorNodes, endName, tpIndex) {
+function seqPreservingComparison(client, length, nodes, start, incomingXorNodes, endName, tpIndex) {
   var prev = start;
   var prevId = start;
-  var endConnection = {};
+  const endConnection = {};
   var k = null;
   var s = null;
   var l;
@@ -24,7 +24,7 @@ var seqPreservingComparison = function (client, length, nodes, start, incomingXo
       "finalEnd": start,
       "finalStart": prev,
       "conv": tpIndex,
-    }
+    };
     let delay = computeDelay(nodes, node.start, node.dataNode);
     if (k == null || s == null) {
       k = str;
@@ -47,7 +47,7 @@ var seqPreservingComparison = function (client, length, nodes, start, incomingXo
       nodes[str][status].tpIpArray.push(tpIndex);
     }
     nodes[str][status].delayArray.push(delay);
-    nodes[str][status].statusArray.push(node)
+    nodes[str][status].statusArray.push(node);
     let arrIndex = nodes[str][status].statusArray.length - 1;
     nodes[str][status].statusArray[arrIndex].arrIndex = arrIndex;
     prev = str + ' ' + status;
@@ -63,8 +63,9 @@ var seqPreservingComparison = function (client, length, nodes, start, incomingXo
   nodes.endConnection = endConnection;
   return nodes;
 }
-var outgoingXOR = function (nodes) {
-  var counterArray = []
+
+function outgoingXOR(nodes) {
+  var counterArray = [];
   var xorTitle;
   for (var key in nodes) {
     for (var status in nodes[key]) {
@@ -98,10 +99,11 @@ var outgoingXOR = function (nodes) {
   }
   return nodes;
 }
-var incomingXOR = function (nodes, start, incomingXorNodes) {
-  var incomingXorKeys = []
+
+function incomingXOR(nodes, start, incomingXorNodes) {
+  var incomingXorKeys = [];
   var keyCounter = 0;
-  var keyArray = []
+  var keyArray = [];
   for (var key in nodes) {
     keyArray.push(key);
   }
@@ -158,63 +160,22 @@ var incomingXOR = function (nodes, start, incomingXorNodes) {
   var obj = {
     "nodes": nodes,
     incomingXorNodes: incomingXorNodes,
-  }
+  };
   return obj;
 }
 
-//Compute Delay Avg
-var computeDelayAvg = function (nodes, key, st) {
-  var avg = 0;
-  if (st == "total") {
-    let counter = 0;
-    for (var status in nodes[key]) {
-      for (let i = 0; i < nodes[key][status].delayArray.length; i++) {
-        avg += nodes[key][status].delayArray[i];
-        counter++;
-      }
-    }
-    return (avg / counter);
-  }
-  for (let i = 0; i < nodes[key][st].delayArray.length; i++) {
-    avg += nodes[key][st].delayArray[i];
-  }
-  return (avg / nodes[key][st].delayArray.length);
-}
-
-//Simple Comparison Algorithm
-var simpleComparison = function (clients, clientIP) {
-  var size = clients[clientIP].length
-  var responses = [];
-  var marked = new Array(size).fill(false);
-  for (let i = 0; i < size; i++) {
-    responses[i] = [];
-    if (!marked[i]) {
-      responses[i].push({id: i, client: clients[clientIP][i]})
-      marked[i] = true;
-      for (let j = i + 1; j < size; j++) {
-        if ((clients[clientIP][j].status != responses[i][0].client.status) && (clients[clientIP][j].method == responses[i][0].client.method) &&
-          clients[clientIP][j].location == responses[i][0].client.location) {
-          marked[j] = true;
-          responses[i].push({id: j, client: clients[clientIP][j]})
-        }
-      }
-    }
-  }
-  return responses;
-}
-
-var computeDelay = function (nodes, startNode, endNode) {
+function computeDelay(nodes, startNode, endNode) {
   if (startNode.includes("start")) return 0;
   startNode = startNode.split(' ');
   let length = nodes[startNode[0]][startNode[1]].statusArray.length;
-  let startDate = new Date(nodes[startNode[0]][startNode[1]].statusArray[length - 1].dataNode.datetime)
+  let startDate = new Date(nodes[startNode[0]][startNode[1]].statusArray[length - 1].dataNode.datetime);
   let endDate = new Date(endNode.datetime);
   return (endDate - startDate);
 }
 
-var totalNumberOfRequests = function (nodes) {
+function totalNumberOfRequests(nodes) {
   var counter = 0;
-  var totalNumberOfRequests = {}
+  var totalNumberOfRequests = {};
   var max = Number.MIN_VALUE;
   for (var key in nodes) {
     for (var status in nodes[key]) {
@@ -231,7 +192,8 @@ var totalNumberOfRequests = function (nodes) {
     "maxRequests": max
   };
 }
-var getSelectedIPs = function (clients, elem) {
+
+function getSelectedIPs(clients, elem) {
   var result = {};
   var options = elem && elem.options;
   var opt;
@@ -251,51 +213,54 @@ var getSelectedIPs = function (clients, elem) {
   }
   return result;
 }
-var sortLogs = function (clients) {
+
+function sortLogs(clients) {
   clients.sort((a, b) => compare(a.datetime, b.datetime));
   return clients;
 }
-var compare = function (a, b) {
+
+function compare(a, b) {
   a = new Date(a);
   b = new Date(b);
-  if (a > b) return 1
-  else if (a === b) return 0
-  else return -1
+  if (a > b) return 1;
+  else if (a === b) return 0;
+  else return -1;
 }
-var differenceThreshold = function (client) {
+
+function differenceThreshold(client) {
   client = sortLogs(client);
   let avg = 0;
   let min = Number.MAX_VALUE;
   let max = Number.MIN_VALUE;
   var timePeriods = [];
   for (let i = 1; i < client.length; i++) {
-    let date = new Date(client[i - 1].datetime)
-    let date1 = new Date(client[i].datetime)
+    let date = new Date(client[i - 1].datetime);
+    let date1 = new Date(client[i].datetime);
     let diff = Math.abs(date1 - date);
     avg += diff;
-    if (max < diff) max = diff
+    if (max < diff) max = diff;
     if (min > diff) min = diff;
   }
   avg /= (client.length - 1);
   let diffThreshold = (min + max) / 2;
-  var timeP = []
-  timeP.push(client[0])
+  var timeP = [];
+  timeP.push(client[0]);
   for (let i = 1; i < client.length; i++) {
-    let date = new Date(client[i - 1].datetime)
-    let date1 = new Date(client[i].datetime)
+    let date = new Date(client[i - 1].datetime);
+    let date1 = new Date(client[i].datetime);
     let diff = Math.abs(date1 - date);
     if (diff > diffThreshold) {
       if (timeP == []) timeP.push(client[i - 1]);
       timePeriods.push(timeP);
-      timeP = []
+      timeP = [];
     }
     timeP.push(client[i]);
   }
   if (timeP != []) timePeriods.push(timeP);
   return timePeriods;
 }
-var checkIfIncomingXorExists = function (nodes, key, incomingXorNodes, size, inXorId) {
 
+function checkIfIncomingXorExists(nodes, key, incomingXorNodes, size, inXorId) {
   if (size == 1) {
     var id = Object.keys(incomingXorNodes[key])[0].split(' ');
     for (var status in nodes[key]) {
@@ -308,8 +273,8 @@ var checkIfIncomingXorExists = function (nodes, key, incomingXorNodes, size, inX
   }
 }
 
-var multipleIncomingXorSetUp = function (g, nodes, key, inXorIdSize, maxDelay, minDelay, incomingXorNodes) {
-  var str = "inXOR-" + key
+function multipleIncomingXorSetUp(g, nodes, key, inXorIdSize, maxDelay, minDelay, incomingXorNodes) {
+  var str = "inXOR-" + key;
   if (inXorIdSize > 1) {
     for (var space in incomingXorNodes[key]) {
       var len = incomingXorNodes[key][space][0].length;
@@ -346,12 +311,14 @@ var multipleIncomingXorSetUp = function (g, nodes, key, inXorIdSize, maxDelay, m
     }
   }
 }
-var getProbability = function (nodes, key, status, length) {
+
+function getProbability(nodes, key, status, length) {
   return (roundUp(length / nodes[key][status].statusArray.length * 100, 1));
 }
-var getProbabilityLabel = function (nodes, s1, s2, length) {
+
+function getProbabilityLabel(nodes, s1, s2, length) {
   if (s1.includes("start")) return '';
-  s1 = s1.split('-')
+  s1 = s1.split('-');
   if (s1.length > 1) s1 = s1[1];
   else s1 = s1[0];
 
@@ -361,20 +328,7 @@ var getProbabilityLabel = function (nodes, s1, s2, length) {
   return p;
 }
 
-var increaseAppropriateEdge = function (size, key, status, comparisonTableData, kind) {
-  if (kind === "outgoingXOR" && size == 1) {
-    if (comparisonTableData.nodes[key].totalArray.length == 1) comparisonTableData.uniqueEdges.size++;
-    else comparisonTableData.overlappingEdges.size++;
-  } else if (kind === "incomingXOR" && size == 1) {
-    if (comparisonTableData.nodes[key].totalArray.length == 1) comparisonTableData.uniqueEdges.size++;
-    else comparisonTableData.overlappingEdges.size++;
-  } else if (kind === "middleXOR") {
-    if (comparisonTableData.nodes[key].statuses[status].length == 1) comparisonTableData.uniqueEdges.size++;
-    else comparisonTableData.overlappingEdges.size++;
-  }
-}
-
-var updateComparisonUniqueness = function (word, comparisonTableData, key, status) {
+function updateComparisonUniqueness(word, comparisonTableData, key, status) {
   var dataUniqueness = comparisonTableData.uniqueness;
   var dataUniquenessNodes = comparisonTableData.uniquenessNodes;
   var dataNodeIpTp = comparisonTableData.nodeIpTp
@@ -411,8 +365,9 @@ var updateComparisonUniqueness = function (word, comparisonTableData, key, statu
     else dataUniquenessNodes[tPiP].nodes.push(key + ' ' + status);
   }
 }
-var createComparisonUniquenessTable = function (data) {
-  var fx = function (data, arr) {
+
+function createComparisonUniquenessTable(data) {
+  function fx(data, arr) {
     for (var node in data) {
       if (node == 1) arr.push(["Unique Nodes", data[node]]);
       else arr.push([("Shared between " + node + " \n IP/TP"), data[node]]);
@@ -420,19 +375,21 @@ var createComparisonUniquenessTable = function (data) {
   }
   return createPieChart(data, fx, "Uniqueness of Nodes");
 }
-var createComparisonNodeIpTpTable = function (data) {
-  var fx = function (data, arr) {
+
+function createComparisonNodeIpTpTable(data) {
+  function fx(data, arr) {
     for (var node in data) {
       arr.push(["IP/TP-" + node, data[node]]);
     }
   }
   return createPieChart(data, fx, "IP/TP Number of Nodes")
 }
-var createConversationSharingNodes = function (data) {
-  var fx = function (data, arr) {
+
+function createConversationSharingNodes(data) {
+  function fx(data, arr) {
     for (var elem in data) {
       const oldElem = elem;
-      elem = elem.split('-')
+      elem = elem.split('-');
       if (elem.length > 1) {
         arr.push(["IP/TP-" + oldElem, data[oldElem].counter]);
       } else {
@@ -442,12 +399,12 @@ var createConversationSharingNodes = function (data) {
   }
   return createPieChart(data, fx, "IP/TP Shared Nodes")
 }
-var createDynamicPieChart = function (data) {
 
-  var fx = function (data, arr) {
+function createDynamicPieChart(data) {
+  function fx(data, arr) {
     for (var elem in data) {
       const oldElem = elem;
-      elem = elem.split('-')
+      elem = elem.split('-');
       if (elem.length > 1) {
         arr.push(["IP/TP-" + oldElem, data[oldElem]]);
       } else {
@@ -457,8 +414,9 @@ var createDynamicPieChart = function (data) {
   }
   return createPieChart(data, fx, "Dynamic Sharing PieChart")
 }
-var createPieChart = function (data, fx, title) {
-  var arr = []
+
+function createPieChart(data, fx, title) {
+  var arr = [];
   arr.push(["Task", "Hours Per Day"]);
   fx(data, arr);
   // Optional; add a title and set the width and height of the chart
@@ -468,40 +426,5 @@ var createPieChart = function (data, fx, title) {
   return {
     data: arr,
     options: options
-  }
-
-}
-var createTable = function (data, fx, id, caption) {
-  var i = 1;
-  var table = document.createElement("TABLE");
-  table.createCaption();
-  table.innerHTML = "<b>" + caption + "</b>";
-  var container = document.getElementById("comparisonTableData");
-  var x = document.createElement("TR");
-  x.setAttribute("id", ("myTr" + id));
-  container.appendChild(table);
-  table.setAttribute("id", id);
-  table.appendChild(x);
-  var y = document.createElement("TR");
-  y.setAttribute("id", ("myTr1" + id));
-  table.appendChild(y);
-  for (var input in data) {
-    var th = document.createElement("TH")
-    var td = document.createElement("TD");
-    var str = fx(i);
-    var text = document.createTextNode(str);
-    var text1 = document.createTextNode(data[input]);
-    th.appendChild(text);
-    x.appendChild(th);
-    td.appendChild(text1);
-    y.appendChild(td);
-    i++;
-  }
-}
-var clearTable = function () {
-  var container = document.getElementById("comparisonTableData");
-  while (container.hasChildNodes()) {
-    container.removeChild(container.childNodes[0])
-  }
-  ;
+  };
 }
