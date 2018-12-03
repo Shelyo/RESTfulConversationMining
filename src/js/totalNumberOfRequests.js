@@ -1,9 +1,9 @@
 function totalNumberOfRequests(nodes) {
-  var counter = 0;
-  var totalNumberOfRequests = {};
-  var max = Number.MIN_VALUE;
-  for (var key in nodes) {
-    for (var status in nodes[key]) {
+  let counter = 0;
+  let totalNumberOfRequests = {};
+  let max = Number.MIN_VALUE;
+  for (let key in nodes) {
+    for (let status in nodes[key]) {
       counter += (nodes[key][status].statusArray.length);
     }
     totalNumberOfRequests[key] = counter;

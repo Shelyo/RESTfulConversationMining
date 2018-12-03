@@ -13,9 +13,9 @@ text {
     display: flex;
 }
 
-/*d-none {*/
-    /*display: none*/
-/*}*/
+.d-none {
+    display: none
+}
 
 #Clients{
     float: left;
