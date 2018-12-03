@@ -70,55 +70,32 @@ class Parser {
     return clients;
   }
 
-}
-
-var links, routes;
-var argv = process.argv;
-if(argv[2] === undefined) links = fs.readFileSync("./data/logs/log3.txt", "ucs2").split(/\n+/);
-else links = fs.readFileSync(argv[2], "utf8").split('\n')
-if(argv[3] != undefined){
- routes = fs.readFileSync(argv[3], "ucs2").split('\n');
-}
-var createRoutes = function(routes){
-var r = [];
-for(let i = 0; i < routes.length; i++){
-  r.push(new Route(routes[i]));
-}
-return r;
-}
-if(routes !== undefined) routes = createRoutes(routes);
-
-var parser = new Parser();
-
-var createData = function(links, routes, fx, flat){
-  var logs;
-  if (flat) {
-    logs = fx(links, routes, flat);
+  createRoutes(routes) {
+    return routes.map((route) => {
+      return Route(route);
+    });
   }
-  else if(routes !== undefined){
-    logs = fx(links, routes);
+
+  init() {
+    const argv = process.argv;
+
+    const links = (argv[2] && fs.readFileSync(argv[2], "utf8").split('\n'))  || fs.readFileSync("./data/logs/log3.txt", "ucs2").split(/\n+/);
+    const routes = argv[3] && this.createRoutes(fs.readFileSync(argv[3], "ucs2").split('\n'));
+
+    let data = {};
+    data.FlatData = this.sortClientsByTime(this.clientSegmentation(this.parseLogs(links, undefined, true)));
+    data.ParseRouteData = this.sortClientsByTime(this.clientSegmentation(this.parseLogs(links, routes)));
+    data.SequentialData = this.sortClientsByTime(this.clientSegmentation(this.parseLogs(links)));
+
+    const filepath = "data/output/data.js"
+    const content = "const data = " + JSON.stringify(data);
+    
+    fs.writeFile(filepath, content, (err) => {
+      if (err) throw err;
+      console.log("The file was succesfully saved!");
+    });
   }
-  else{
-    logs = fx(links);
-  }
-  var clients = parser.clientSegmentation(logs);
-  clients = parser.sortClientsByTime(clients);
-  return clients;
+
 }
 
-var parseRouteData, sequentialParser, flatParser;
-if(routes !== undefined) parseRouteData = createData(links, routes, parser.parseLogs.bind(parser));
-sequentialParser = createData(links, undefined, parser.parseLogs.bind(parser));
-flatParser = createData(links, undefined, parser.parseLogs.bind(parser), true);
-var data = {};
-data.FlatData = flatParser;
-data.ParseRouteData = parseRouteData;
-data.SequentialData = sequentialParser;
-// Save Data into the data.js file.
-var filepath = "data/output/data.js"
-var content = "var data = " + JSON.stringify(data);
-fs.writeFile(filepath, content, (err) => {
-  if (err) throw err;
-
-  console.log("The file was succesfully saved!");
-});
+new Parser().init();
