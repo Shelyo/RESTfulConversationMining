@@ -30,7 +30,7 @@
     <div id="Container" class="d-flex">
         <button onclick="goBack()">Go Back</button>
         <div id="Clients">
-            <select id="multiSelect-Clients" multiple="multiple" onchange="changeTp()">
+            <select id="multiSelect-Clients" multiple="multiple" onchange="changeTimePeriod()">
             </select>
         </div>
         <select id="multiSelect" multiple="multiple">
@@ -48,7 +48,7 @@
         </div>
         <div id="PatternContainer" class="d-flex">
             <div id="CandidatePatternMenu" class="d-block">
-                <form id="formCandidatePatterns" onsubmit="generateCP()" class="d-block">
+                <form id="formCandidatePatterns" onsubmit="generateCandidatePatterns()" class="d-block">
                     <input id="candidateLength" type="number" value="2" min="2" class="d-block">
                     <label for=candidateLength> Candidate Length</label>
                     <input id="shareLvl" type="number" value="2" min="2" class="d-block">

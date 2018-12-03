@@ -42,3 +42,31 @@ function buildRules(ids, rules) {
   }
   return obj;
 };
+
+function setStyleShared(rainbow) {
+  let sheet;
+  if (document.getElementsByTagName("STYLE")[5] !== undefined)
+    sheet = document.getElementsByTagName("STYLE")[5].sheet;
+  for (let i = 0; i < rainbow.length; i++) {
+    let clazz = ".enable-shared-" + (i + 1) + " .shared-" + (i + 1);
+    let st = "fill: " + rainbow[i];
+    sheet.insertRule(clazz + "{ " + st + " }");
+  }
+  document.getElementsByTagName("STYLE")[5].disabled = false;
+};
+
+function fixVisualizationConfig(nfc, eft, edc, sep, statusColoring) {
+
+  nfc.checked = false;
+  eft.checked = false;
+  edc.checked = false;
+  sep.checked = false;
+  statusColoring.checked = false;
+  deleteStyles();
+  disableConversionPaths();
+  clearPatternMenu();
+};
+
+function goBack() {
+  window.history.back();
+}
