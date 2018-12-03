@@ -1,10 +1,8 @@
 
 /* onload function */
 document.addEventListener('DOMContentLoaded', function(){
-  const form = document.getElementById("formId");
-  const form1 = document.getElementById("formCandidatePatterns");
-  form1.onsubmit = generateCP;
-  form.onsubmit = getPattern;
+  document.getElementById("formId").onsubmit = generateCP;
+  document.getElementById("formCandidatePatterns").onsubmit = getPattern;
 }, false);
 
 /* Get data from the LocalStorage */
@@ -13,102 +11,10 @@ let clients = localStorage.getItem('objectToPass');
 clients = JSON.parse(clients);
 
 /* Create the list of Clients. */
-const displayClients = function () {
-  let i = 0;
-  let div = document.getElementById("multiSelect-Clients");
-  for (let client in clients) {
-    let option = document.createElement("option");
-    let linkText = document.createTextNode(i + "-" + client);
-    option.value = i + "-" + client;
-    option.appendChild(linkText);
-    div.appendChild(option);
-    i++;
-  }
-};
 displayClients();
 
-//LOAD Google Charts
-let globalGraph,
-  globalNodes,
-  convDrawn,
-  globalCandidatePatterns;
+let globalGraph, globalNodes, convDrawn, globalCandidatePatterns;
 
-const generatePattern = function (pattern, size) {
-  for (let i = 0; i < size; i++) {
-    pattern[i] = {
-      method: "*",
-      url: "*",
-      status: "*"
-    }
-  }
-};
-const buildRules = function (ids, rules) {
-  let obj = {}, ru, r;
-  for (let rule in rules) {
-    r = rule.split("-");
-    let counter = rules[rule].counter;
-    if (r.length == 1) {
-      if (ids.includes(r[0])) {
-        obj[rule] = counter;
-      }
-    } else {
-      let newArr = [];
-      for (let i = 0; i < r.length; i++) {
-        if (ids.includes(r[i])) {
-          newArr.push(r[i]);
-        }
-      }
-      if (newArr.length > 0) {
-        ru = "";
-        for (let i = 0; i < newArr.length; i++) {
-          if (i === 0) ru = newArr[i];
-          else ru = ru + ("-" + newArr[i]);
-        }
-        if (obj[ru] === undefined) obj[ru] = counter;
-        else obj[ru] += counter;
-      }
-    }
-  }
-
-  return obj;
-};
-const renderSvg = function (g, clazz, rainbow, rules) {
-  let svg = d3.select(clazz);
-  svg.select("g").remove();
-  let inner = svg.append("g");
-
-  // Set up zoom support
-  const zoom = d3.zoom().on("zoom", function () {
-    inner.attr("transform", d3.event.transform);
-  });
-  svg.call(zoom);
-  // Create the renderer
-  let render = new dagreD3.render();
-  // Run the renderer. This is what draws the final graph.
-  render(inner, g);
-  // Center the graph
-  const initialScale = 0.2;
-  svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - g.graph().width * initialScale) / 2, 20).scale(initialScale));
-  svg.selectAll("g.node.start").on("click", function (id) {
-    const n = id.split("start-")[1];
-    document.body.classList.toggle("enable-path-" + n);
-    let arr = document.body.classList.value;
-    arr = arr.split(" ");
-    if (arr[0] !== "") {
-      let ids = [];
-      for (let i = 0; i < arr.length; i++) {
-        ids.push(arr[i].split("enable-path-")[1]);
-      }
-      let data = buildRules(ids, rules);
-      let dynamicData = createDynamicPieChart(data);
-      displayPieChar(dynamicData.data, dynamicData.options, "piechart-4", rainbow, data);
-    } else {
-      let div = document.getElementById("piechart-4");
-      while (div.hasChildNodes()) div.removeChild(div.childNodes[0])
-    }
-    console.log("Clicked " + id);
-  });
-};
 const visualizePattern = function (obj, value) {
   let i = 1;
   for (let node in obj) {
@@ -186,7 +92,7 @@ const vizCandidatePattern = function () {
 };
 const generateCP = function (e) {
   e.preventDefault();
-  cleanPredifinedCandidatePatterns();
+  cleanPredefinedCandidatePatterns();
   const candidateLengthNum = document.getElementById("candidateLength").value;
   const shareNum = document.getElementById("shareLvl").value;
   if (convDrawn !== undefined && convDrawn > 1 && convDrawn >= shareNum) {
@@ -381,6 +287,7 @@ const displayTimePeriods = function (client) {
   };
   el.innerHTML = str;
 };
+
 const changeTp = function () {
   const section = document.getElementById("multiSelect-Clients");
   const options = section && section.options;
@@ -418,6 +325,7 @@ const displayPatterns = function () {
     div.appendChild(option);
   }
 };
+
 const saveCandidatePattern = function () {
   const section = document.getElementById("candidatePatternsList");
   const options = section && section.options;
@@ -432,7 +340,7 @@ const saveCandidatePattern = function () {
     console.log("NO CANDIDATE PATTERNS");
 };
 
-const cleanPredifinedCandidatePatterns = function () {
+const cleanPredefinedCandidatePatterns = function () {
   const elem = document.getElementById("predefinedCandidatePatterns");
   if (elem !== undefined) {
     while (elem.hasChildNodes()) {
@@ -440,7 +348,6 @@ const cleanPredifinedCandidatePatterns = function () {
     }
   }
 };
-
 
 google.charts.load('current', {'packages': ['corechart']});
 
@@ -474,6 +381,7 @@ const vizPattern = function () {
   else
     console.log("PUT PATTERNS");
 };
+
 const hasPatternClick = function (e) {
   if (globalGraph === undefined) console.log("Draw a graph");
   else {
@@ -483,6 +391,7 @@ const hasPatternClick = function (e) {
     checkPatterns(user_select_patterns[value]);
   }
 };
+
 const clearPatternMenu = function () {
   let div = document.getElementById("patternButtons");
   let x = document.getElementsByTagName("STYLE");
@@ -564,7 +473,6 @@ const fixVisualizationConfig = function (nfc, eft, edc, sep, statusColoring) {
 function goBack() {
   window.history.back();
 }
-
 
 function displayPieChar(arr, options, id, rainbow, rules) {
   data = google.visualization.arrayToDataTable(arr);
