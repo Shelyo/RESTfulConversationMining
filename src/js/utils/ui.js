@@ -65,7 +65,7 @@ const changeTimePeriod = function () {
 function displayTimePeriods(client) {
   let el = document.getElementById("multiSelect");
   let form = document.getElementById("multiSelectForm");
-  const timePeriods = differenceThreshold(client);
+  const timePeriods = clusterClientLogs(client);
   let str = "";
   for (let i = 0; i < timePeriods.length; i++) {
     str += '<option value=\'' + i + '\'> Time Period ' + i + '</option>'
