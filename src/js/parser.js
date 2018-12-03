@@ -2,96 +2,57 @@ const fs = require('fs');
 const Route = require('route-parser');
 
 class Parser {
-  parseLogs(logs) {
-    const fields = ['date', 'time', 'ip', 'method', 'location', 'status'];
+
+  parseLogs(logs, routes, flat) {
+    let fields = ['date', 'time', 'ip', 'method', 'location', 'status'];
 
     return logs.map((log) => {
       let logObj = {};
       let logData = log.trim().split(/\s+/);
 
       fields.forEach((field, index) => logObj[field] = logData[index]);
+
+      logObj = this.checkRoutes(routes, logObj, logData);
+      if (flat) logObj['location'] = '/';
+
       return logObj;
     }).filter((e) => !Object.getOwnPropertyNames(e).length === 0);
   }
-  
-}
 
-
-var parseToLogs = function(links) {
-  var logs = [];
-  for(let i = 0; i < links.length; i++){
-    let str = links[i];
-    if(str != ''){
-      let spaces = str.trim().split(/\s+/);
-      let obj = {date : spaces[0], time : spaces[1], ip : spaces[2], method : spaces[3], location: spaces[4], status : spaces[5]}
-      logs.push(obj);
-    }
-  }
-  return logs;
-}
-
-//Read the file and parse it to objects
-//assumes there are routes passed as second parameter
-var readParseURLRouteFile = function(links, routes){
-
-  var logs = [];
-  for(let i = 0; i < links.length; i++){
-    let str = links[i];
-    if(str != ''){
-      let spaces = str.trim().split(/\s+/);
-      var url = spaces[4];
-
+  checkRoutes(routes, logObj, logData) {
+    if (routes) {
       routes.forEach(function(r) {
-        if (r.match(url)) {
-          url = r.spec;
+        if (r.match(logData[4])) {
+          logData[4] = r.spec;
         }
-      })
-
-      let obj = {date : spaces[0], time : spaces[1], ip : spaces[2], method : spaces[3], location: url, status : spaces[5]}
-      logs.push(obj);
+      });
+      logObj['location'] = logData[4];
     }
+    return logObj;
   }
-  return logs;
-}
 
-var flatProcessingOfFile = function(links){
-  var logs = [];
-  for(let i = 0; i < links.length; i++){
-    let str = links[i];
-    if(str != ''){
-      let spaces = str.trim().split(/\s+/);
-      let obj = {date : spaces[0], time : spaces[1], ip : spaces[2], method : spaces[3], location: "/", status : spaces[5]}
-      logs.push(obj);
-    }
+  clientSegmentation(logs) {
+    let clients = {}
+    logs.forEach((log, index) => {
+      const ip = logs[index].ip;
+      clients[ip]?  clients[ip].push(logs[index]) : [];
+    });
+
+    return clients;
   }
-  return logs;
-}
 
-//Client segmentation.
-var clientSegmentation = function(logs){
-  var clients = {}
-  for(let i = 0; i < logs.length; i++){
-    var ip = logs[i].ip;
-    if(clients[ip] === undefined) {
-      clients[ip] = [];
-    }
-    clients[ip].push(logs[i]);
+  compare(a, b) {
+    if (a == b) return 0;
+    return (a > b)? 1 : -1;
   }
-  return clients;
-}
+  
+  sortClientsByTime(clients) {
+    // set datetime
+    Object.keys(clients).forEach((ip) => {
+      ip && clients[ip].forEach((_, i) => {
+        const build1 = clients[ip][i].date.split('/')
+        const build2 = clients[ip][i].time.split(':')
 
-//Sort Each Client by time/date.
-var compare = function(a,b) {
-  if(a > b) return 1
-  else if (a === b) return 0
-  else return -1
-}
-var sortClientByDateTime = function(clients){
-  for(var ip in clients){
-    if(ip !== undefined){
-      for(let i = 0; i < clients[ip].length; i++){
-        let build1 = clients[ip][i].date.split('/')
-        let build2 = clients[ip][i].time.split(':')
         let date = new Date();
         date.setDate(build1[0])
         date.setMonth(build1[1]-1)
@@ -101,13 +62,14 @@ var sortClientByDateTime = function(clients){
         date.setSeconds(build2[2])
         date.setMilliseconds(0);
         clients[ip][i].datetime = date;
-      }
-    }
+      });
+    })
+
+    for (var ip in clients) clients[ip].sort((a,b) => this.compare(a.datetime,b.datetime));
+    
+    return clients;
   }
-  for(var ip in clients){
-    clients[ip].sort((a,b) => compare(a.datetime,b.datetime));
-  }
-  return clients;
+
 }
 
 var links, routes;
@@ -115,7 +77,7 @@ var argv = process.argv;
 if(argv[2] === undefined) links = fs.readFileSync("./data/logs/log3.txt", "ucs2").split(/\n+/);
 else links = fs.readFileSync(argv[2], "utf8").split('\n')
 if(argv[3] != undefined){
- routes = fs.readFileSync(argv[3], "utf8").split('\n');
+ routes = fs.readFileSync(argv[3], "ucs2").split('\n');
 }
 var createRoutes = function(routes){
 var r = [];
@@ -126,23 +88,28 @@ return r;
 }
 if(routes !== undefined) routes = createRoutes(routes);
 
-var createData = function(links, routes, fx){
+var parser = new Parser();
+
+var createData = function(links, routes, fx, flat){
   var logs;
-  if(routes !== undefined){
+  if (flat) {
+    logs = fx(links, routes, flat);
+  }
+  else if(routes !== undefined){
     logs = fx(links, routes);
   }
   else{
     logs = fx(links);
   }
-  var clients = clientSegmentation(logs);
-  clients = sortClientByDateTime(clients);
+  var clients = parser.clientSegmentation(logs);
+  clients = parser.sortClientsByTime(clients);
   return clients;
 }
 
 var parseRouteData, sequentialParser, flatParser;
-if(routes !== undefined) parseRouteData = createData(links, routes, readParseURLRouteFile);
-sequentialParser = createData(links, undefined, Parser.parseLogs);
-flatParser = createData(links, undefined, flatProcessingOfFile);
+if(routes !== undefined) parseRouteData = createData(links, routes, parser.parseLogs.bind(parser));
+sequentialParser = createData(links, undefined, parser.parseLogs.bind(parser));
+flatParser = createData(links, undefined, parser.parseLogs.bind(parser), true);
 var data = {};
 data.FlatData = flatParser;
 data.ParseRouteData = parseRouteData;
