@@ -1,12 +1,11 @@
 
 /* onload function */
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function(){
   const form = document.getElementById("formId");
   const form1 = document.getElementById("formCandidatePatterns");
   form1.onsubmit = generateCP;
   form.onsubmit = getPattern;
-});
-
+}, false);
 
 /* Get data from the LocalStorage */
 
