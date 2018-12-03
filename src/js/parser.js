@@ -47,7 +47,6 @@ class Parser {
   }
   
   sortClientsByTime(clients) {
-    // set datetime
     Object.keys(clients).forEach((ip) => {
       ip && clients[ip].forEach((_, i) => {
         const build1 = clients[ip][i].date.split('/')
