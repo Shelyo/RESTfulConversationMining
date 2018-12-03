@@ -5,7 +5,7 @@
  * @param {Array<Object>} clientLogs list of clients
  * @returns {Array<Array<Object>>} client logs clustered into lists of "close" time intervals
  */
-function differenceThreshold(clientLogs) {
+function clusterClientLogs(clientLogs) {
   const sortedClientLogs = sortClientsByLogTime(clientLogs);
 
   // Get intervals and compute interval length threshold
