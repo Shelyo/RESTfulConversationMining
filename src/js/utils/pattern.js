@@ -1,3 +1,4 @@
+
 function generatePattern(pattern, size) {
   for (let i = 0; i < size; i++) {
     pattern[i] = {
@@ -7,6 +8,7 @@ function generatePattern(pattern, size) {
     }
   }
 }
+
 
 function visualizePattern(obj, value) {
   let i = 1;

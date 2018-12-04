@@ -11,3 +11,5 @@
 # Ignore node_modules and bower_components
 src/node_modules
 src/bower_components
+
+src/data/output/data\.js
